@@ -9,35 +9,38 @@ terraform {
 }
 
 
-provider "google" {
-  region = var.region
+data "terraform_remote_state" "vpc" {
+  backend = "remote"
+
+  config = {
+    organization = var.network_org
+    workspaces = {
+      name = var.network_workspace
+    }
+  }
 }
 
+
+provider "google" {
+  region = data.terraform_remote_state.vpc.outputs.region
+}
 
 data "google_compute_zones" "available" {}
 
-resource "google_compute_network" "vpc" {
+data "google_compute_network" "vpc" {
   name = local.name
 }
 
-resource "google_compute_instance" "vm" {
+module "tags" {
+  source      = "./tag"
+  team        = var.team
+  environment = var.environment
+}
+
+module "server" {
+  source       = "./server"
   name         = local.name
-  machine_type = var.machine_type
   zone         = data.google_compute_zones.available.names.0
-
-  boot_disk {
-    initialize_params {
-      image = var.machine_image
-    }
-  }
-
-
-  network_interface {
-    network = google_compute_network.vpc.name
-    access_config {
-      network_tier = "STANDARD"
-    }
-  }
-
-  labels = local.labels
+  network_name = data.google_compute_network.vpc.name
+  tags         = merge(var.labels, module.tags.gcp)
 }

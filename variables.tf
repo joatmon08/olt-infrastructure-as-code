@@ -1,8 +1,3 @@
-variable "region" {
-  type        = string
-  description = "GCP region"
-}
-
 variable "team" {
   type        = string
   description = "team for resources"
@@ -13,21 +8,14 @@ variable "environment" {
   description = "environment of resources"
 }
 
-variable "cidr_block" {
+variable "network_org" {
   type        = string
-  description = "CIDR block of subnet"
+  description = "network state store organization"
 }
 
-variable "machine_type" {
+variable "network_workspace" {
   type        = string
-  description = "machine type for compute instance"
-  default     = "e2-micro"
-}
-
-variable "machine_image" {
-  type        = string
-  description = "machine image for compute instance"
-  default     = "ubuntu-1804-lts"
+  description = "network state store workspace"
 }
 
 variable "labels" {
@@ -38,11 +26,4 @@ variable "labels" {
 
 locals {
   name = "${var.team}-${var.environment}"
-  labels = merge(var.labels, {
-    automated   = "terraform",
-    environment = var.environment,
-    team        = var.team
-  })
 }
-
-
