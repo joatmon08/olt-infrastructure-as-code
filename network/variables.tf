@@ -21,5 +21,3 @@ variable "cidr_block" {
 locals {
   name = "${var.team}-${var.environment}"
 }
-
-
