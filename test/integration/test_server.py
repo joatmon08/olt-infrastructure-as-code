@@ -4,25 +4,22 @@ import pytest
 import googleapiclient.discovery
 
 
-ENVIRONMENT = 'dev'
-NETWORK_VARIABLES_FILE = f'network/{ENVIRONMENT}.tfvars'
-SERVER_VARIABLES_FILE = f'{ENVIRONMENT}.tfvars'
-
-
 @pytest.fixture(scope='session')
 def project():
     return os.environ['CLOUDSDK_CORE_PROJECT']
 
 
 @pytest.fixture(scope='session')
-def region():
+def region(request):
+    NETWORK_VARIABLES_FILE = f'network/{request.config.option.environment}.tfvars'
     with open(NETWORK_VARIABLES_FILE, 'r') as f:
         variables = hcl2.load(f)
     return variables['region']
 
 
 @pytest.fixture(scope='session')
-def name():
+def name(request):
+    SERVER_VARIABLES_FILE = f'{request.config.option.environment}.tfvars'
     with open(SERVER_VARIABLES_FILE, 'r') as f:
         variables = hcl2.load(f)
     return f'{variables["team"]}-{variables["environment"]}'
