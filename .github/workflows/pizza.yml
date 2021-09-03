@@ -1,0 +1,49 @@
+name: pizza - infrastructure delivery pipeline
+
+on:
+  push:
+    branches: [ 04_pipeline ]
+  pull_request:
+    branches: [ 04_pipeline ]
+
+jobs:
+  test-unit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      working-directory: .
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with autopep8
+      run: |
+        autopep8 -r -d --exit-code .
+    - name: Run unit tests
+      run: |
+        pytest test/unit/
+
+  test-contract:
+    needs: test-unit
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      working-directory: .
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with autopep8
+      run: |
+        autopep8 -r -d --exit-code .
+    - name: Run contract tests
+      run: |
+        pytest test/contract/
