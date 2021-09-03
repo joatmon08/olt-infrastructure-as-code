@@ -47,3 +47,23 @@ jobs:
     - name: Run contract tests
       run: |
         pytest test/contract/
+
+
+  deploy-dev:
+    needs: test-contract
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.5
+    - name: Deploy infrastructure to dev
+      env:
+        CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+        GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      run: |
+        echo $GOOGLE_SERVICE_ACCOUNT_JSON  | base64 -d > $GOOGLE_APPLICATION_CREDENTIALS
+        terraform init
+        terraform apply -auto-approve -var-file=dev.tfvars

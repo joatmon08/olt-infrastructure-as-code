@@ -1,4 +1,4 @@
 region      = "us-east1"
 team        = "pizza"
 environment = "prod"
-cidr_block  = "10.0.0.0/24"
+cidr_block  = "10.1.0.0/24"
