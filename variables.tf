@@ -24,6 +24,12 @@ variable "labels" {
   default     = {}
 }
 
+variable "client_ip_address" {
+  type        = string
+  description = "Client IP address for external VM access"
+  default     = "0.0.0.0/0"
+}
+
 locals {
   name = "${var.team}-${var.environment}"
 }

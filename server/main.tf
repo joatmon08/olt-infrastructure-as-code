@@ -24,6 +24,12 @@ variable "machine_type" {
   default     = "e2-micro"
 }
 
+variable "startup_script" {
+  type        = string
+  description = "startup_script for compute instance"
+  default     = null
+}
+
 data "google_compute_image" "ubuntu" {
   family  = "ubuntu-1804-lts"
   project = "ubuntu-os-cloud"
@@ -39,6 +45,13 @@ variable "tags" {
   description = "map of tags to label instance"
 }
 
+variable "network_tags" {
+  type        = list(string)
+  description = "list of network tags"
+  default     = []
+}
+
+
 resource "google_compute_instance" "vm" {
   name         = var.name
   machine_type = var.machine_type
@@ -50,6 +63,7 @@ resource "google_compute_instance" "vm" {
     }
   }
 
+  metadata_startup_script = var.startup_script
 
   network_interface {
     network = var.network_name
@@ -58,5 +72,8 @@ resource "google_compute_instance" "vm" {
     }
   }
 
-  labels = var.tags
+  labels            = var.tags
+  tags              = var.network_tags
+  metadata          = {}
+  resource_policies = []
 }
