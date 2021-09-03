@@ -1,12 +1,12 @@
 import pytest
 import hcl2
 
-NETWORK_OUTPUTS_FILE = 'network/outputs.tf'
 SERVER_INPUTS_FILE = 'server/variables.tf'
 
 
 @pytest.fixture
-def outputs():
+def outputs(request):
+    NETWORK_OUTPUTS_FILE = f'network/{request.config.option.environment}/outputs.tf'
     with open(NETWORK_OUTPUTS_FILE, 'r') as f:
         output = hcl2.load(f)
     return output['output']

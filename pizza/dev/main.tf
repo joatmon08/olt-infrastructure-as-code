@@ -32,13 +32,13 @@ data "google_compute_network" "vpc" {
 }
 
 module "tags" {
-  source      = "./tag"
+  source      = "../../tag"
   team        = var.team
   environment = var.environment
 }
 
 module "server" {
-  source         = "./server"
+  source         = "../../server"
   name           = local.name
   zone           = data.google_compute_zones.available.names.0
   network_name   = data.google_compute_network.vpc.name
