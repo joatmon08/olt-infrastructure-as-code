@@ -1,2 +1,2 @@
 team        = "pizza"
-environment = "dev"
+environment = "prod"

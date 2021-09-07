@@ -66,7 +66,7 @@ jobs:
     - name: Initialize
       working-directory: ./application/dev
       run: terraform init
-    - name: Plan
+    - name: Deploy
       working-directory: ./application/dev
       env:
         CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
@@ -75,7 +75,7 @@ jobs:
         export GOOGLE_CREDENTIALS=$(echo $GOOGLE_SERVICE_ACCOUNT_JSON | base64 -d)
         terraform apply -no-color -auto-approve
 
-  test-integration:
+  test-integration-dev:
     environment: dev
     needs: deploy-dev
     runs-on: ubuntu-latest
@@ -97,3 +97,80 @@ jobs:
         export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/key.json
         echo $GOOGLE_SERVICE_ACCOUNT_JSON | base64 -d > $(pwd)/key.json
         pytest test/integration/ --environment=dev
+
+  deploy-prod:
+    environment: prod
+    needs: test-integration-dev
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.5
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+    - name: Set up environment
+      working-directory: ./application/prod
+      env:
+        TF_BACKEND: ${{ secrets.TF_BACKEND }}
+        TF_SECRET_VARIABLES: ${{ secrets.TF_SECRET_VARIABLES }}
+      run: |
+        echo $TF_BACKEND  | base64 -d > backend.tf
+        echo $TF_SECRET_VARIABLES  | base64 -d > secrets.auto.tfvars
+    - name: Initialize
+      working-directory: ./application/prod
+      run: terraform init
+    - name: Deploy
+      working-directory: ./application/prod
+      env:
+        CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+        GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      run: |
+        export GOOGLE_CREDENTIALS=$(echo $GOOGLE_SERVICE_ACCOUNT_JSON | base64 -d)
+        terraform apply -no-color -auto-approve
+
+  test-integration-prod:
+    environment: prod
+    needs: deploy-prod
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run integration tests
+      env:
+        CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+        GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      run: |
+        export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/key.json
+        echo $GOOGLE_SERVICE_ACCOUNT_JSON | base64 -d > $(pwd)/key.json
+        pytest test/integration/ --environment=prod
+
+  test-e2e:
+    environment: prod
+    needs: test-integration-prod
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run end-to-end tests
+      env:
+        CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
+        GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      run: |
+        export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/key.json
+        echo $GOOGLE_SERVICE_ACCOUNT_JSON | base64 -d > $(pwd)/key.json
+        pytest test/e2e/ --environment=prod

@@ -12,7 +12,7 @@ def project():
 
 @pytest.fixture(scope='session')
 def region(request):
-    NETWORK_VARIABLES_FILE = f'network/{request.config.option.environment}.tfvars'
+    NETWORK_VARIABLES_FILE = f'network/{request.config.option.environment}/terraform.auto.tfvars'
     with open(NETWORK_VARIABLES_FILE, 'r') as f:
         variables = hcl2.load(f)
     return variables['region']
@@ -20,7 +20,7 @@ def region(request):
 
 @pytest.fixture(scope='session')
 def name(request):
-    SERVER_VARIABLES_FILE = f'{request.config.option.environment}.tfvars'
+    SERVER_VARIABLES_FILE = f'application/{request.config.option.environment}/terraform.auto.tfvars'
     with open(SERVER_VARIABLES_FILE, 'r') as f:
         variables = hcl2.load(f)
     return f'{variables["team"]}-{variables["environment"]}'
