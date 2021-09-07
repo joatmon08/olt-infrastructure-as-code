@@ -1,0 +1,222 @@
+{
+    "format_version": "0.2",
+    "terraform_version": "1.0.5",
+    "planned_values": {
+        "root_module": {
+            "resources": [
+                {
+                    "address": "google_compute_firewall.vm",
+                    "mode": "managed",
+                    "type": "google_compute_firewall",
+                    "name": "vm",
+                    "provider_name": "registry.terraform.io/hashicorp/google",
+                    "schema_version": 1,
+                    "values": {
+                        "allow": [
+                            {
+                                "ports": [
+                                    "80"
+                                ],
+                                "protocol": "tcp"
+                            }
+                        ],
+                        "creation_timestamp": "2021-09-07T07:26:40.916-07:00",
+                        "deny": [],
+                        "description": "Creates firewall rule for tagged instances",
+                        "destination_ranges": [],
+                        "direction": "INGRESS",
+                        "disabled": false,
+                        "enable_logging": null,
+                        "id": "projects/REDACTED/global/firewalls/pizza-dev",
+                        "log_config": [],
+                        "name": "pizza-dev",
+                        "network": "https://www.googleapis.com/compute/v1/projects/REDACTED/global/networks/pizza-dev",
+                        "priority": 1000,
+                        "project": "REDACTED",
+                        "self_link": "https://www.googleapis.com/compute/v1/projects/REDACTED/global/firewalls/pizza-dev",
+                        "source_ranges": [
+                            "0.0.0.0/0"
+                        ],
+                        "source_service_accounts": [],
+                        "source_tags": [],
+                        "target_service_accounts": [],
+                        "target_tags": [
+                            "http-server"
+                        ],
+                        "timeouts": null
+                    },
+                    "sensitive_values": {
+                        "allow": [
+                            {
+                                "ports": [
+                                    false
+                                ]
+                            }
+                        ],
+                        "deny": [],
+                        "destination_ranges": [],
+                        "log_config": [],
+                        "source_ranges": [
+                            false
+                        ],
+                        "source_service_accounts": [],
+                        "source_tags": [],
+                        "target_service_accounts": [],
+                        "target_tags": [
+                            false
+                        ]
+                    }
+                }
+            ],
+            "child_modules": [
+                {
+                    "resources": [
+                        {
+                            "address": "module.server.google_compute_instance.vm",
+                            "mode": "managed",
+                            "type": "google_compute_instance",
+                            "name": "vm",
+                            "provider_name": "registry.terraform.io/hashicorp/google",
+                            "schema_version": 6,
+                            "values": {
+                                "advanced_machine_features": [],
+                                "allow_stopping_for_update": null,
+                                "attached_disk": [],
+                                "boot_disk": [
+                                    {
+                                        "auto_delete": true,
+                                        "device_name": "persistent-disk-0",
+                                        "disk_encryption_key_raw": "",
+                                        "disk_encryption_key_sha256": "",
+                                        "initialize_params": [
+                                            {
+                                                "image": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1804-bionic-v20210825",
+                                                "labels": {},
+                                                "size": 10,
+                                                "type": "pd-standard"
+                                            }
+                                        ],
+                                        "kms_key_self_link": "",
+                                        "mode": "READ_WRITE",
+                                        "source": "https://www.googleapis.com/compute/v1/projects/REDACTED/zones/us-central1-a/disks/pizza-dev"
+                                    }
+                                ],
+                                "can_ip_forward": false,
+                                "confidential_instance_config": [],
+                                "cpu_platform": "Intel Haswell",
+                                "current_status": "RUNNING",
+                                "deletion_protection": false,
+                                "description": "",
+                                "desired_status": null,
+                                "enable_display": false,
+                                "guest_accelerator": [],
+                                "hostname": "",
+                                "id": "projects/REDACTED/zones/us-central1-a/instances/pizza-dev",
+                                "instance_id": "3629284940708497486",
+                                "label_fingerprint": "8ogZ7TSKN8g=",
+                                "labels": {
+                                    "automated": "terraform",
+                                    "environment": "dev",
+                                    "team": "pizza"
+                                },
+                                "machine_type": "e2-micro",
+                                "metadata": {},
+                                "metadata_fingerprint": "rkVdlpCKttQ=",
+                                "metadata_startup_script": "  sudo apt update\n  sudo apt install -y nginx\n",
+                                "min_cpu_platform": "",
+                                "name": "pizza-dev",
+                                "network_interface": [
+                                    {
+                                        "access_config": [
+                                            {
+                                                "nat_ip": "35.208.218.151",
+                                                "network_tier": "STANDARD",
+                                                "public_ptr_domain_name": ""
+                                            }
+                                        ],
+                                        "alias_ip_range": [],
+                                        "name": "nic0",
+                                        "network": "https://www.googleapis.com/compute/v1/projects/REDACTED/global/networks/pizza-dev",
+                                        "network_ip": "10.128.0.2",
+                                        "nic_type": "",
+                                        "subnetwork": "https://www.googleapis.com/compute/v1/projects/REDACTED/regions/us-central1/subnetworks/pizza-dev",
+                                        "subnetwork_project": "REDACTED"
+                                    }
+                                ],
+                                "project": "REDACTED",
+                                "reservation_affinity": [],
+                                "resource_policies": [],
+                                "scheduling": [
+                                    {
+                                        "automatic_restart": true,
+                                        "min_node_cpus": 0,
+                                        "node_affinities": [],
+                                        "on_host_maintenance": "MIGRATE",
+                                        "preemptible": false
+                                    }
+                                ],
+                                "scratch_disk": [],
+                                "self_link": "https://www.googleapis.com/compute/v1/projects/REDACTED/zones/us-central1-a/instances/pizza-dev",
+                                "service_account": [],
+                                "shielded_instance_config": [
+                                    {
+                                        "enable_integrity_monitoring": true,
+                                        "enable_secure_boot": false,
+                                        "enable_vtpm": true
+                                    }
+                                ],
+                                "tags": [
+                                    "http-server"
+                                ],
+                                "tags_fingerprint": "FYLDgkTKlA4=",
+                                "timeouts": null,
+                                "zone": "us-central1-a"
+                            },
+                            "sensitive_values": {
+                                "advanced_machine_features": [],
+                                "attached_disk": [],
+                                "boot_disk": [
+                                    {
+                                        "initialize_params": [
+                                            {
+                                                "labels": {}
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "confidential_instance_config": [],
+                                "guest_accelerator": [],
+                                "labels": {},
+                                "metadata": {},
+                                "network_interface": [
+                                    {
+                                        "access_config": [
+                                            {}
+                                        ],
+                                        "alias_ip_range": []
+                                    }
+                                ],
+                                "reservation_affinity": [],
+                                "resource_policies": [],
+                                "scheduling": [
+                                    {
+                                        "node_affinities": []
+                                    }
+                                ],
+                                "scratch_disk": [],
+                                "service_account": [],
+                                "shielded_instance_config": [
+                                    {}
+                                ],
+                                "tags": [
+                                    false
+                                ]
+                            }
+                        }
+                    ],
+                    "address": "module.server"
+                }
+            ]
+        }
+    }
+}
