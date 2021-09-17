@@ -20,12 +20,11 @@ def inputs():
 
 
 def test_network_output_should_be_region(outputs):
-    try:
-        for output in outputs:
-            if 'region' in output.keys():
-                assert 'var.region' in output['region']['value']
-    except:
-        pytest.fail('region not in network output')
+    output_includes_region = False
+    for output in outputs:
+        if 'region' in output.keys() and 'var.region' in output['region']['value']:
+            output_includes_region = True
+    assert output_includes_region
 
 
 def test_server_input_should_not_include_region(inputs):
