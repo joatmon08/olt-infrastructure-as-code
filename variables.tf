@@ -39,7 +39,7 @@ variable "labels" {
 locals {
   name = "${var.team}-${var.environment}"
   labels = merge(var.labels, {
-    automated   = "Terraform",
+    automated   = "terraform",
     environment = var.environment,
     team        = var.team
   })

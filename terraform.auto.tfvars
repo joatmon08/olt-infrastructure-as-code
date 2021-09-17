@@ -1,4 +1,4 @@
-region      = "us-central1"
+region      = "us-east1"
 team        = "pizza"
-environment = "dev"
+environment = "test"
 cidr_block  = "10.0.0.0/24"
