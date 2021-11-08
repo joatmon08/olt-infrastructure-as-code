@@ -12,7 +12,7 @@ jobs:
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: 1.0.5
+        terraform_version: 1.0.9
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
@@ -41,7 +41,7 @@ jobs:
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: 1.0.5
+        terraform_version: 1.0.9
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
     - name: Set up environment
       working-directory: ./application/dev
@@ -95,7 +95,7 @@ jobs:
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: 1.0.5
+        terraform_version: 1.0.9
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
     - name: Set up environment
       working-directory: ./application/prod
