@@ -46,7 +46,7 @@ module "server" {
   network_tags   = ["http-server"]
   startup_script = <<EOT
   sudo apt update
-  sudo apt install -y nginx
+  sudo apt install -y nginx curl
   EOT
 }
 
